@@ -1,61 +1,81 @@
 {
   "tableHeaders": [
     {
-      "name": "Name",
-      "salary": "Salary",
-      "employmentDate": "Date Of Employment"
+      "title": "Name",
+      "field": "name",
+      "id": "1"
+    },
+    {
+      "title": "Salary",
+      "field": "salary",
+      "id": "2"
+    },
+    {
+      "title": "Date Of Employment",
+      "field": "employmentDate",
+      "id": "3"
     }
   ],
   "tableData": [
     {
       "name": "Jan",
       "salary": "2000",
-      "employmentDate": "2021-08-01"
+      "employmentDate": "2021-08-01",
+      "id": "1"
     },
     {
       "name": "Ala",
       "salary": "3000",
-      "employmentDate": "2018-08-01"
+      "employmentDate": "2018-08-01",
+      "id": "2"
     },
     {
       "name": "Victor",
       "salary": "3200",
-      "employmentDate": "2010-10-21"
+      "employmentDate": "2010-10-21",
+      "id": "3"
     },
     {
       "name": "Ola",
       "salary": "14500",
-      "employmentDate": "1999-02-01"
+      "employmentDate": "1999-02-01",
+      "id": "4"
     },
     {
       "name": "Eustachy",
       "salary": "5820",
-      "employmentDate": "2015-12-10"
+      "employmentDate": "2015-12-10",
+      "id": "5"
     },
     {
       "name": "Ela",
       "salary": "7820",
-      "employmentDate": "2011-09-15"
+      "employmentDate": "2011-09-15",
+      "id": "6"
     },
     {
       "name": "Marcin",
       "salary": "20000",
-      "employmentDate": "1990-06-13"
+      "employmentDate": "1990-06-13",
+      "id": "7"
     },
     {
       "name": "Iza",
       "salary": "2500",
-      "employmentDate": "2023-06-13"
+      "employmentDate": "2023-06-13",
+      "id": "8"
     },
     {
       "name": "Alex",
       "salary": "4800",
-      "employmentDate": "2018-03-01"
+      "employmentDate": "2018-03-01",
+      "id": "9"
     },
     {
       "name": "Ula",
       "salary": "7700",
-      "employmentDate": "2020-01-30"
+      "employmentDate": "2020-01-30",
+      "id": "10"
     }
   ]
 }

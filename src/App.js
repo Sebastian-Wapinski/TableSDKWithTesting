@@ -6,7 +6,6 @@ import CustomErrorBoundary from './components/CustomErrorBoundary/CustomErrorBou
 const App = () => {
   return (
     <ErrorBoundary FallbackComponent={CustomErrorBoundary}>
-      <h1>Działa</h1>
       <CreateTable />
     </ErrorBoundary>
   )

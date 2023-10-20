@@ -42,6 +42,10 @@ export const CreateTable = () => {
       <TableSdk
         columns={localTableHeaders}
         data={localTableData}
+        options={{
+          filter: true,
+          sort: true
+        }}
       />
     </StyledCreateTable>
   )

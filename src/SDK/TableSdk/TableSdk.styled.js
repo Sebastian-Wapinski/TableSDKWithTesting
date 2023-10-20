@@ -1,11 +1,11 @@
 import styled from 'styled-components'
 
-const DefaultStyledTableSdk = styled.div`
+const DefaultStyledContainerSdk = styled.div`
 
 `
 
-const StyledTableSdk = styled(DefaultStyledTableSdk)(
+const StyledContainerSdk = styled(DefaultStyledContainerSdk)(
   props => props.style
 )
 
-export { StyledTableSdk }
+export { StyledContainerSdk }
