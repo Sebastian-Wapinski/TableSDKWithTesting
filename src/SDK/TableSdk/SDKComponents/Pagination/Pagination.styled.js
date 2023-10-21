@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-const DefaultStyledPagination = styled.div`
+const DefaultStyledPagination = styled.tbody`
 
 `
 

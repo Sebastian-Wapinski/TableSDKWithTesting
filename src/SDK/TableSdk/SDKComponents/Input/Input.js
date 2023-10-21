@@ -8,7 +8,8 @@ export const Input = (props) => {
     name,
     filterFn,
     setFilteredData,
-    filteredData
+    filteredData,
+    setCurrentPageNumber
   } = props
 
   const [value, setValue] = React.useState('')
@@ -21,6 +22,7 @@ export const Input = (props) => {
       onChange={(e) => {
         const newObj = { ...filteredData, [name]: e.target.value }
         setFilteredData(newObj)
+        setCurrentPageNumber(1)
         setValue(e.target.value)
         filterFn(newObj)
       }}
@@ -32,6 +34,7 @@ Input.propTypes = {
   name: PropTypes.string,
   filterFn: PropTypes.func,
   setFilteredData: PropTypes.func,
+  setCurrentPageNumber: PropTypes.func,
   filteredData: PropTypes.object
 }
 

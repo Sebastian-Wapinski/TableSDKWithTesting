@@ -5,7 +5,7 @@ import { StyledContainerSdk } from './TableSdk.styled'
 import TableHeadings from './SDKComponents/TableHeadings'
 import TableData from './SDKComponents/TableData'
 import Input from './SDKComponents/Input'
-import Pagination from './SDKComponents/Pagination/Pagination'
+import PaginationNav from './SDKComponents/PaginationNav/PaginationNav'
 
 export const TableSdk = (props) => {
   const {
@@ -67,6 +67,7 @@ export const TableSdk = (props) => {
         index={index}
         setFilteredData={setFilteredData}
         filteredData={filteredData}
+        setCurrentPageNumber={setCurrentPageNumber}
       />
     )
   })
@@ -76,31 +77,35 @@ export const TableSdk = (props) => {
       {
         filter ? inputsToFilter : null
         }
-      <Pagination
-        pageNum={currentPageNumber}
-        setCurrentPageNumber={setCurrentPageNumber}
-      >
-        <table>
-          <thead>
-            <TableHeadings
-              columns={columns}
-              onClick={sort ? sortFn : null}
-              filter={filter}
-              inputsToFilter={filter ? inputsToFilter : null}
-            />
-          </thead>
-          {
-          moderatedData.length > 0 ?
-            <TableData
-              columns={columns}
-              data={moderatedData}
-            />
-            :
+      <table>
+        <thead>
+          <TableHeadings
+            columns={columns}
+            onClick={sort ? sortFn : null}
+            filter={filter}
+            inputsToFilter={filter ? inputsToFilter : null}
+          />
+        </thead>
+        {
+            moderatedData.length > 0 ?
+              <TableData
+                columns={columns}
+                data={moderatedData}
+                currentPageNumber={currentPageNumber}
+              />
+              :
             // <tbody><tr><td>No Data</td></tr></tbody>
-            null
+              null
           }
-        </table>
-      </Pagination>
+      </table>
+      <nav>
+        <ul>
+          <PaginationNav
+            data={moderatedData}
+            setCurrentPageNumber={setCurrentPageNumber}
+          />
+        </ul>
+      </nav>
     </StyledContainerSdk>
   )
 }

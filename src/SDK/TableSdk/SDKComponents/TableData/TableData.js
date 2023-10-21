@@ -1,16 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { StyledTableData } from './TableData.styled'
+// import { StyledTableData } from './TableData.styled'
+import Pagination from '../Pagination/Pagination'
 
 export const TableData = (props) => {
   const {
     columns,
-    data
+    data,
+    currentPageNumber
   } = props
 
   return (
-    <StyledTableData>
+    <Pagination
+      pageNum={currentPageNumber}
+    >
       {
         data.length !== 0 ?
           data.map((row) => {
@@ -29,13 +33,14 @@ export const TableData = (props) => {
           :
           null
         }
-    </StyledTableData>
+    </Pagination>
   )
 }
 
 TableData.propTypes = {
   columns: PropTypes.array,
-  data: PropTypes.array
+  data: PropTypes.array,
+  currentPageNumber: PropTypes.number
 }
 
 export default TableData
