@@ -13,11 +13,11 @@ export const TableHeadings = (props) => {
     <StyledTableHeadings>
       {
         columns.length !== 0 ?
-          columns.map((column) => {
+          columns.map((column, index) => {
             return (
               <th
-                key={`${column.id}/${column.title}`}
                 onClick={() => onClick(column.field)}
+                key={`${column.field}/${index}/heading`}
               >
                 {column.title}
               </th>
