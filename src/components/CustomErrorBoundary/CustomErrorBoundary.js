@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { StyledCustomErrorBoundary } from './CustomErrorBoundary.styled'
+import { StyledCustomErrorBoundary, StyledPreMessage, StyledMessage, StyledRefreshButton } from './CustomErrorBoundary.styled'
 import { useErrorBoundary } from 'react-error-boundary'
 
 export const CustomErrorBoundary = (props) => {
@@ -12,12 +12,10 @@ export const CustomErrorBoundary = (props) => {
   const { resetBoundary } = useErrorBoundary()
 
   return (
-    <StyledCustomErrorBoundary
-      role={'alert'}
-    >
-      <p>Something went wrong. Error Message:</p>
-      <p>{error.message}</p>
-      <button onClick={resetBoundary}>REFRESH</button>
+    <StyledCustomErrorBoundary role={'alert'} >
+      <StyledPreMessage>Something went wrong. Error Message:</StyledPreMessage>
+      <StyledMessage>{error.message}</StyledMessage>
+      <StyledRefreshButton onClick={resetBoundary}>REFRESH</StyledRefreshButton>
     </StyledCustomErrorBoundary>
   )
 }
