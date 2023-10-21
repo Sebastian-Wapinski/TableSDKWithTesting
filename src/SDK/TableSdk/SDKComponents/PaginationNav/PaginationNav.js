@@ -7,7 +7,8 @@ export const PaginationNav = (props) => {
   const {
     limit = 5,
     data,
-    setCurrentPageNumber
+    setCurrentPageNumber,
+    setAllPages
   } = props
 
   const calculatePagesAmount = () => {
@@ -30,6 +31,10 @@ export const PaginationNav = (props) => {
     )
   }))
 
+  React.useEffect(() => {
+    setAllPages(pages)
+  }, [pages, setAllPages])
+
   return (
     <StyledPaginationNav>
       {pageNumbers}
@@ -40,7 +45,8 @@ export const PaginationNav = (props) => {
 PaginationNav.propTypes = {
   limit: PropTypes.number,
   data: PropTypes.array,
-  setCurrentPageNumber: PropTypes.func
+  setCurrentPageNumber: PropTypes.func,
+  setAllPages: PropTypes.func
 }
 
 export default PaginationNav

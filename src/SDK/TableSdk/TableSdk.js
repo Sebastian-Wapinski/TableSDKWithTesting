@@ -20,6 +20,7 @@ export const TableSdk = (props) => {
   const [sortOrder, setSortOrder] = React.useState('asc')
   const [filteredData, setFilteredData] = React.useState({})
   const [currentPageNumber, setCurrentPageNumber] = React.useState(1)
+  const [allPages, setAllPages] = React.useState(1)
 
   React.useEffect(() => {
     setModeratedData(data)
@@ -103,9 +104,31 @@ export const TableSdk = (props) => {
           <PaginationNav
             data={moderatedData}
             setCurrentPageNumber={setCurrentPageNumber}
+            setAllPages={setAllPages}
           />
         </ul>
       </nav>
+      <div>
+        <button
+          onClick={() => {
+            if (currentPageNumber > 1) {
+              setCurrentPageNumber(prevState => prevState - 1)
+            }
+          }}
+        >
+          &lsaquo;
+        </button>
+        <p>{currentPageNumber}/{allPages}</p>
+        <button
+          onClick={() => {
+            if (currentPageNumber < allPages) {
+              setCurrentPageNumber(prevState => prevState + 1)
+            }
+          }}
+        >
+          &rsaquo;
+        </button>
+      </div>
     </StyledContainerSdk>
   )
 }
