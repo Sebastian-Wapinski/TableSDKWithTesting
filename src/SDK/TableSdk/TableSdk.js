@@ -2,9 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { StyledContainerSdk } from './TableSdk.styled'
-import TableHeadings from './SDKComponents/TableHeadings/TableHeadings'
-import TableData from './SDKComponents/TableData/TableData'
-import Input from './SDKComponents/Input/Input'
+import TableHeadings from './SDKComponents/TableHeadings'
+import TableData from './SDKComponents/TableData'
+import Input from './SDKComponents/Input'
+import Pagination from './SDKComponents/Pagination/Pagination'
 
 export const TableSdk = (props) => {
   const {
@@ -18,6 +19,7 @@ export const TableSdk = (props) => {
   const [moderatedData, setModeratedData] = React.useState([])
   const [sortOrder, setSortOrder] = React.useState('asc')
   const [filteredData, setFilteredData] = React.useState({})
+  const [currentPageNumber, setCurrentPageNumber] = React.useState(1)
 
   React.useEffect(() => {
     setModeratedData(data)
@@ -55,7 +57,7 @@ export const TableSdk = (props) => {
     setModeratedData(newFilteredData)
   }
 
-  const inputsToFilter = [...columns.map((column, index) => {
+  const inputsToFilter = [...columns].map((column, index) => {
     return (
       <Input
         type={'text'}
@@ -67,26 +69,27 @@ export const TableSdk = (props) => {
         filteredData={filteredData}
       />
     )
-  })]
+  })
 
   return (
     <StyledContainerSdk>
       {
-          filter ?
-            inputsToFilter
-            :
-            null
+        filter ? inputsToFilter : null
         }
-      <table>
-        <thead>
-          <TableHeadings
-            columns={columns}
-            onClick={sort ? sortFn : null}
-            filter={filter}
-            inputsToFilter={filter ? inputsToFilter : null}
-          />
-        </thead>
-        {
+      <Pagination
+        pageNum={currentPageNumber}
+        setCurrentPageNumber={setCurrentPageNumber}
+      >
+        <table>
+          <thead>
+            <TableHeadings
+              columns={columns}
+              onClick={sort ? sortFn : null}
+              filter={filter}
+              inputsToFilter={filter ? inputsToFilter : null}
+            />
+          </thead>
+          {
           moderatedData.length > 0 ?
             <TableData
               columns={columns}
@@ -95,8 +98,9 @@ export const TableSdk = (props) => {
             :
             // <tbody><tr><td>No Data</td></tr></tbody>
             null
-        }
-      </table>
+          }
+        </table>
+      </Pagination>
     </StyledContainerSdk>
   )
 }

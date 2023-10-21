@@ -31,7 +31,6 @@ export const Input = (props) => {
 Input.propTypes = {
   name: PropTypes.string,
   filterFn: PropTypes.func,
-  index: PropTypes.number,
   setFilteredData: PropTypes.func,
   filteredData: PropTypes.object
 }
