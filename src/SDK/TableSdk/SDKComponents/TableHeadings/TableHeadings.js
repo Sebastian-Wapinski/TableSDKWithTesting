@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { StyledTableHeadings } from './TableHeadings.styled'
+import { StyledTableHeadings, StyledTh } from './TableHeadings.styled'
 
 export const TableHeadings = (props) => {
   const {
@@ -15,12 +15,12 @@ export const TableHeadings = (props) => {
         columns.length !== 0 ?
           columns.map((column, index) => {
             return (
-              <th
+              <StyledTh
                 onClick={() => onClick(column.field)}
                 key={`${column.field}/${index}/heading`}
               >
                 {column.title}
-              </th>
+              </StyledTh>
             )
           })
           :

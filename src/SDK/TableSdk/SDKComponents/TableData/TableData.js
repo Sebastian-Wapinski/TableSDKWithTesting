@@ -1,46 +1,67 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-// import { StyledTableData } from './TableData.styled'
-import Pagination from '../Pagination/Pagination'
+import { StyledTbody, StyledTr, StyledTd, StyledTdInput } from './TableData.styled'
+import Pagination from '../Pagination'
 
 export const TableData = (props) => {
   const {
     columns,
     data,
-    currentPageNumber
+    currentPageNumber,
+    inputsToFilter
   } = props
 
   return (
-    <Pagination
-      pageNum={currentPageNumber}
-    >
-      {
-        data.length !== 0 ?
-          data.map((row) => {
+    <>
+      <tbody>
+        <StyledTr>
+          {
+          inputsToFilter.map((input, index) => {
             return (
-              <tr key={`${row.id}/${row.name}`}>
-                {
-                  columns.map((cell) => {
-                    return (
-                      <td key={`${row.id}/${row.name}/${cell.id}`}>{row[cell.field]}</td>
-                    )
-                  })
-                }
-              </tr>
+              <StyledTdInput key={`${index}/input`}>{input}</StyledTdInput>
             )
           })
+      }
+        </StyledTr>
+      </tbody>
+      {
+        data.length !== 0 ?
+          <Pagination
+            pageNum={currentPageNumber}
+          >
+            {
+            data.map((row) => {
+              return (
+                <StyledTr key={`${row.id}/${row.name}`}>
+                  {
+                      columns.map((cell) => {
+                        return (
+                          <StyledTd key={`${row.id}/${row.name}/${cell.id}`}>{row[cell.field]}</StyledTd>
+                        )
+                      })
+                    }
+                </StyledTr>
+              )
+            })
+            }
+          </Pagination>
           :
-          null
+          <StyledTbody>
+            <StyledTr>
+              <StyledTd colSpan={columns.length}>NO DATA</StyledTd>
+            </StyledTr>
+          </StyledTbody>
         }
-    </Pagination>
+    </>
   )
 }
 
 TableData.propTypes = {
   columns: PropTypes.array,
   data: PropTypes.array,
-  currentPageNumber: PropTypes.number
+  currentPageNumber: PropTypes.number,
+  inputsToFilter: PropTypes.array
 }
 
 export default TableData

@@ -19,6 +19,7 @@ export const Input = (props) => {
       type={'text'}
       name={name}
       value={value}
+      autoComplete={'one-time-code'}
       onChange={(e) => {
         const newObj = { ...filteredData, [name]: e.target.value }
         setFilteredData(newObj)

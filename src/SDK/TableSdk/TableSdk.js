@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { StyledContainerSdk } from './TableSdk.styled'
+import { StyledContainerSdk, StyledTable, StyledThead } from './TableSdk.styled'
 import TableHeadings from './SDKComponents/TableHeadings'
 import TableData from './SDKComponents/TableData'
 import Input from './SDKComponents/Input'
 import PaginationNav from './SDKComponents/PaginationNav/PaginationNav'
+import ButtonsChangingPages from './SDKComponents/ButtonsChangingPages/ButtonsChangingPages'
 
 export const TableSdk = (props) => {
   const {
@@ -75,60 +76,38 @@ export const TableSdk = (props) => {
 
   return (
     <StyledContainerSdk>
-      {
-        filter ? inputsToFilter : null
-        }
-      <table>
-        <thead>
+      <StyledTable>
+        <StyledThead>
           <TableHeadings
             columns={columns}
             onClick={sort ? sortFn : null}
             filter={filter}
             inputsToFilter={filter ? inputsToFilter : null}
           />
-        </thead>
-        {
-            moderatedData.length > 0 ?
-              <TableData
-                columns={columns}
-                data={moderatedData}
-                currentPageNumber={currentPageNumber}
-              />
-              :
-            // <tbody><tr><td>No Data</td></tr></tbody>
-              null
-          }
-      </table>
-      <nav>
-        <ul>
-          <PaginationNav
-            data={moderatedData}
+        </StyledThead>
+        <TableData
+          columns={columns}
+          data={moderatedData}
+          currentPageNumber={currentPageNumber}
+          inputsToFilter={filter ? inputsToFilter : null}
+        />
+      </StyledTable>
+      <PaginationNav
+        data={moderatedData}
+        setCurrentPageNumber={setCurrentPageNumber}
+        setAllPages={setAllPages}
+        currentPageNumber={currentPageNumber}
+      />
+      {
+        moderatedData.length > 0 ?
+          <ButtonsChangingPages
+            currentPageNumber={currentPageNumber}
             setCurrentPageNumber={setCurrentPageNumber}
-            setAllPages={setAllPages}
+            allPages={allPages}
           />
-        </ul>
-      </nav>
-      <div>
-        <button
-          onClick={() => {
-            if (currentPageNumber > 1) {
-              setCurrentPageNumber(prevState => prevState - 1)
-            }
-          }}
-        >
-          &lsaquo;
-        </button>
-        <p>{currentPageNumber}/{allPages}</p>
-        <button
-          onClick={() => {
-            if (currentPageNumber < allPages) {
-              setCurrentPageNumber(prevState => prevState + 1)
-            }
-          }}
-        >
-          &rsaquo;
-        </button>
-      </div>
+          :
+          null
+      }
     </StyledContainerSdk>
   )
 }
