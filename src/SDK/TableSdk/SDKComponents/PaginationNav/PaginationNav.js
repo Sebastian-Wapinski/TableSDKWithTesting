@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { StyledPaginationNav, StyledUl, StyledLi, StyledDots } from './PaginationNav.styled'
+import { StyledPaginationNav, StyledUl, StyledLi, StyledDots, StyledPaginationContainer } from './PaginationNav.styled'
 
 export const PaginationNav = (props) => {
   const {
-    limit = 5,
+    pageLimit = 5,
     data,
     setCurrentPageNumber,
     setAllPages,
@@ -13,7 +13,7 @@ export const PaginationNav = (props) => {
   } = props
 
   const calculatePagesAmount = () => {
-    return Math.ceil((isNaN(length) ? 0 : length) / limit)
+    return Math.ceil((isNaN(length) ? 0 : length) / pageLimit)
   }
 
   const length = data && data.length
@@ -32,6 +32,7 @@ export const PaginationNav = (props) => {
         onClick={() => {
           setCurrentPageNumber(index + 1)
         }}
+        data-testid={`${index + 1}/pageNumber/test/${isActive}`}
       >
         {index + 1}
       </StyledLi>
@@ -79,19 +80,19 @@ export const PaginationNav = (props) => {
 
       if (currentPageNumber > 3 && pageNumber === 2) {
         return (
-          <>
-            <StyledDots>...</StyledDots>
+          <StyledPaginationContainer key={`${index}/dots`}>
+            <StyledDots data-testid={'startDots'}>...</StyledDots>
             {item}
-          </>
+          </StyledPaginationContainer>
         )
       }
 
       if (currentPageNumber < (pages - 2) && pageNumber === 4) {
         return (
-          <>
+          <StyledPaginationContainer key={`${index}/dots`}>
             {item}
-            <StyledDots>...</StyledDots>
-          </>
+            <StyledDots data-testid={'endDots'}>...</StyledDots>
+          </StyledPaginationContainer>
         )
       }
 
@@ -112,7 +113,7 @@ export const PaginationNav = (props) => {
 }
 
 PaginationNav.propTypes = {
-  limit: PropTypes.number,
+  pageLimit: PropTypes.number,
   currentPageNumber: PropTypes.number,
   data: PropTypes.array,
   setCurrentPageNumber: PropTypes.func,

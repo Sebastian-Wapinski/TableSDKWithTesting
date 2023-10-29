@@ -25,7 +25,7 @@ export const CreateTable = () => {
       }
 
       const tableData = await getData('tableData')
-      if (areNotEqualData(localTableData, tableData)) {
+      if (areNotEqualData(localTableData, tableData) && localTableHeaders.length !== 0) {
         setLocalTableData(tableData)
       }
     } catch (error) {
@@ -46,6 +46,7 @@ export const CreateTable = () => {
           filter: true,
           sort: true
         }}
+        pageLimit={5}
       />
     </StyledCreateTable>
   )

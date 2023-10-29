@@ -27,6 +27,7 @@ export const ButtonsChangingPages = (props) => {
       <StyledButton
         onClick={setPrevPage}
         disabled={(currentPageNumber === 1)}
+        data-testid={'prevButton/ButtonsChangingPages'}
       >
         &lsaquo;
       </StyledButton>
@@ -34,6 +35,7 @@ export const ButtonsChangingPages = (props) => {
       <StyledButton
         onClick={setNextPage}
         disabled={(currentPageNumber === allPages)}
+        data-testid={'nextButton/ButtonsChangingPages'}
       >
         &rsaquo;
       </StyledButton>

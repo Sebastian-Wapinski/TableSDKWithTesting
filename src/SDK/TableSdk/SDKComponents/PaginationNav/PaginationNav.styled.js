@@ -51,4 +51,12 @@ const StyledDots = styled.p`
 color: ${props => props.theme.primaryTextColor};
 `
 
-export { StyledPaginationNav, StyledUl, StyledLi, StyledDots }
+const StyledPaginationContainer = styled.div`
+max-width: 5rem;
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+`
+
+export { StyledPaginationNav, StyledUl, StyledLi, StyledDots, StyledPaginationContainer }

@@ -7,11 +7,11 @@ export const Pagination = (props) => {
   const {
     children,
     pageNum = 1,
-    limit = 5
+    pageLimit = 5
   } = props
 
-  const begin = limit * (pageNum - 1)
-  const end = pageNum * limit
+  const begin = pageLimit * (pageNum - 1)
+  const end = pageNum * pageLimit
 
   return (
     children ?
@@ -25,7 +25,7 @@ export const Pagination = (props) => {
 
 Pagination.propTypes = {
   children: PropTypes.node,
-  limit: PropTypes.number,
+  pageLimit: PropTypes.number,
   pageNum: PropTypes.number,
   currentPageNumber: PropTypes.number
 }

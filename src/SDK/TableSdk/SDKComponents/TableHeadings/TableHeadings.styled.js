@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { responsiveSizes } from '../../../../components/style/responsiveSizes'
 
 const DefaultStyledTableHeadings = styled.tr`
@@ -19,10 +19,14 @@ transition: all 0.3s ease-in-out;
 min-width: 3rem;
 max-width: 10rem;
 
-&:hover {
-  cursor: pointer;
-  background: ${props => props.theme.primaryBackground};
-  color: ${props => props.theme.forthBackground};
+${
+  props => props.$isSorting && css`
+    &:hover {
+      cursor: pointer;
+      background: ${props => props.theme.primaryBackground};
+      color: ${props => props.theme.forthBackground};
+}
+  `
 }
 
 @media (max-width: ${responsiveSizes.small}) {
