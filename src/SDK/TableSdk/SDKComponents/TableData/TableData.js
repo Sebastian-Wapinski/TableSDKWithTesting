@@ -92,7 +92,7 @@ export const TableData = (props) => {
           :
           <StyledTbody>
             <StyledTr>
-              <StyledTd colSpan={columns.length}>NO DATA</StyledTd>
+              <StyledTd colSpan={columns}>NO DATA</StyledTd>
             </StyledTr>
           </StyledTbody>
         }

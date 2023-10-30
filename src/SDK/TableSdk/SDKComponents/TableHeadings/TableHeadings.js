@@ -39,7 +39,6 @@ export const TableHeadings = (props) => {
   return (
     <StyledTableHeadings>
       {
-        columns.length !== 0 ?
           columns.map((column, index) => {
             return (
               <StyledTh
@@ -52,8 +51,6 @@ export const TableHeadings = (props) => {
               </StyledTh>
             )
           })
-          :
-          null
         }
     </StyledTableHeadings>
   )

@@ -9,29 +9,17 @@ import TableSdk from '../../SDK/TableSdk/TableSdk'
 import { useErrorBoundary } from 'react-error-boundary'
 
 export const CreateTable = () => {
-  const [localTableHeaders, setLocalTableHeaders] = React.useState([])
-  const [localTableData, setLocalTableData] = React.useState([])
+  const [data, setData] = React.useState([])
   const { showBoundary } = useErrorBoundary()
-
-  const areNotEqualData = React.useCallback((param1, param2) => {
-    return (JSON.stringify(param1) !== JSON.stringify(param2))
-  }, [])
 
   const fetchData = React.useCallback(async () => {
     try {
-      const tableHeaders = await getData('tableHeaders')
-      if (areNotEqualData(localTableHeaders, tableHeaders)) {
-        setLocalTableHeaders(tableHeaders)
-      }
-
-      const tableData = await getData('tableData')
-      if (areNotEqualData(localTableData, tableData) && localTableHeaders.length !== 0) {
-        setLocalTableData(tableData)
-      }
+      const fetchedData = await getData('data')
+      setData(fetchedData)
     } catch (error) {
       showBoundary(error)
     }
-  }, [areNotEqualData, localTableData, localTableHeaders, showBoundary])
+  }, [showBoundary])
 
   React.useEffect(() => {
     fetchData()
@@ -39,15 +27,20 @@ export const CreateTable = () => {
 
   return (
     <StyledCreateTable>
-      <TableSdk
-        columns={localTableHeaders}
-        data={localTableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={5}
-      />
+      {
+        data.length !== 0 ?
+          <TableSdk
+            columns={data.tableHeaders}
+            data={data.tableData}
+            options={{
+              filter: true,
+              sort: true
+            }}
+            pageLimit={5}
+          />
+          :
+          null
+      }
     </StyledCreateTable>
   )
 }

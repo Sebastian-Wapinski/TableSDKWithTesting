@@ -12,9 +12,13 @@ import { act } from 'react-dom/test-utils'
 describe('TableSdk rendering basic pages', () => {
   it('should render headers', () => {
     render(
-      <TableHeadings
-        columns={columns}
-      />
+      <table>
+        <thead>
+          <TableHeadings
+            columns={columns}
+          />
+        </thead>
+      </table>
     )
 
     const header1 = screen.getByText(/Name/i)
@@ -28,12 +32,14 @@ describe('TableSdk rendering basic pages', () => {
 
   it('should render data', () => {
     render(
-      <TableData
-        columns={columns}
-        data={tableData}
-        moderatedData={tableData}
-        filter={false}
-      />
+      <table>
+        <TableData
+          columns={columns}
+          data={tableData}
+          moderatedData={tableData}
+          filter={false}
+        />
+      </table>
     )
 
     const data1 = screen.getByText(/Jan/i)

@@ -26,35 +26,36 @@ export const TableSdk = (props) => {
   }, [data])
 
   return (
-    <StyledContainerSdk>
-      <StyledTable>
-        <StyledThead>
-          <TableHeadings
+    typeof columns !== 'undefined' && typeof data !== 'undefined' ?
+      <StyledContainerSdk>
+        <StyledTable>
+          <StyledThead>
+            <TableHeadings
+              columns={columns}
+              $isSorting={sort}
+              setModeratedData={setModeratedData}
+              moderatedData={moderatedData}
+            />
+          </StyledThead>
+          <TableData
             columns={columns}
-            $isSorting={sort}
-            setModeratedData={setModeratedData}
             moderatedData={moderatedData}
+            data={data}
+            currentPageNumber={currentPageNumber}
+            filter={filter}
+            setModeratedData={setModeratedData}
+            setCurrentPageNumber={setCurrentPageNumber}
+            pageLimit={pageLimit}
           />
-        </StyledThead>
-        <TableData
-          columns={columns}
-          moderatedData={moderatedData}
-          data={data}
-          currentPageNumber={currentPageNumber}
-          filter={filter}
-          setModeratedData={setModeratedData}
+        </StyledTable>
+        <PaginationNav
+          data={moderatedData}
           setCurrentPageNumber={setCurrentPageNumber}
+          setAllPages={setAllPages}
+          currentPageNumber={currentPageNumber}
           pageLimit={pageLimit}
         />
-      </StyledTable>
-      <PaginationNav
-        data={moderatedData}
-        setCurrentPageNumber={setCurrentPageNumber}
-        setAllPages={setAllPages}
-        currentPageNumber={currentPageNumber}
-        pageLimit={pageLimit}
-      />
-      {
+        {
         moderatedData.length > 0 ?
           <ButtonsChangingPages
             currentPageNumber={currentPageNumber}
@@ -64,7 +65,9 @@ export const TableSdk = (props) => {
           :
           null
       }
-    </StyledContainerSdk>
+      </StyledContainerSdk>
+      :
+      null
   )
 }
 

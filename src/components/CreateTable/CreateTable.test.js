@@ -1,169 +1,122 @@
 import React from 'react'
-import { render, screen, waitFor } from '@testing-library/react'
 import CreateTable from './CreateTable'
-import { ErrorBoundary } from 'react-error-boundary'
-import { getData } from '../../provider/getData'
+import { useErrorBoundary } from 'react-error-boundary'
 import { act } from 'react-dom/test-utils'
+import { render, screen } from '@testing-library/react'
+import { getData } from '../../provider/getData'
 import TableSdk from '../../SDK/TableSdk/TableSdk'
-import CustomErrorBoundary from '../CustomErrorBoundary/CustomErrorBoundary'
 
-jest.mock('../../provider/getData')
+const mockData = {
+  data: {
+    tableHeaders: [
+      {
+        title: 'Name',
+        field: 'name',
+        id: '1'
+      },
+      {
+        title: 'Salary',
+        field: 'salary',
+        id: '2'
+      }
+    ],
+    tableData: [
+      {
+        name: 'Jan',
+        salary: '2000',
+        id: '1'
+      },
+      {
+        name: 'Ala',
+        salary: '3000',
+        id: '2'
+      }
+    ]
+  }
+}
+
 jest.spyOn(window, 'fetch')
+
+jest.mock('react-error-boundary', () => {
+  return {
+    useErrorBoundary: jest.fn()
+  }
+})
 
 describe('CreateTable', () => {
   it('should fetch data', async () => {
-    window.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        tableHeaders: [
-          {
-            title: 'Name',
-            field: 'name',
-            id: '1'
-          },
-          {
-            title: 'Salary',
-            field: 'salary',
-            id: '2'
-          }
-        ]
-      })
-    })
-
-    const columns = await getData('tableHeaders')
-    const { tableHeaders } = columns
+    const showBoundary = jest.fn()
+    useErrorBoundary.mockReturnValue({ showBoundary })
 
     window.fetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({
-        tableData: [
-          {
-            name: 'Jan',
-            salary: '2000',
-            id: '1'
-          },
-          {
-            name: 'Ala',
-            salary: '3000',
-            id: '2'
-          }
-        ]
-      })
+      json: async () => (mockData)
     })
 
-    const rows = await getData('tableData')
-    const { tableData } = rows
-
-    await act(async () =>
+    await act(async () => {
       render(
-        <ErrorBoundary FallbackComponent={CustomErrorBoundary}>
-          {
-          tableHeaders && tableData ?
-            <CreateTable>
-              <TableSdk
-                columns={tableHeaders}
-                data={tableData}
-                options={{
-                  filter: true,
-                  sort: true
-                }}
-                pageLimit={2}
-              />
-            </CreateTable>
-            :
-            null
-        }
-        </ErrorBoundary>
+        <CreateTable />
       )
-    )
-
-    // expect(window.fetch).toHaveBeenCalledTimes(2)
-
-    // await waitFor(() => {
-    //   screen.debug()
-    // })
-
-    await waitFor(() => {
-      const nameHeader = screen.getByText('Name')
-      const salaryHeader = screen.getByText('Salary')
-
-      expect(nameHeader).toBeInTheDocument()
-      expect(salaryHeader).toBeInTheDocument()
-      expect(screen.queryByText('Date Of Employment')).toBeNull()
     })
+
+    expect(window.fetch).toHaveBeenCalledTimes(1)
+    expect(window.fetch).toHaveBeenCalledWith('http://localhost:3005/data')
+    expect(window.fetch).toHaveReturnedTimes(1)
+
+    const fetchedDataReturnValueObject = await window.fetch.mock.results[0].value
+    const fetchedDataReturnValue = await fetchedDataReturnValueObject.json()
+
+    expect(fetchedDataReturnValue).toEqual(mockData)
+  })
+
+  it('should render tableSdk', async () => {
+    const showBoundary = jest.fn()
+    useErrorBoundary.mockReturnValue({ showBoundary })
+
+    window.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => (mockData)
+    })
+
+    const fetchedData = await getData('data')
+
+    expect(window.fetch).toHaveBeenCalledTimes(1)
+    expect(window.fetch).toHaveBeenCalledWith('http://localhost:3005/data')
+    expect(window.fetch).toHaveReturnedTimes(1)
+
+    const fetchedDataReturnValueObject = await window.fetch.mock.results[0].value
+    const fetchedDataReturnValue = await fetchedDataReturnValueObject.json()
+
+    expect(fetchedDataReturnValue).toEqual(mockData)
+
+    act(() => {
+      render(
+        <TableSdk
+          columns={fetchedData.data.tableHeaders}
+          data={fetchedData.data.tableData}
+          options={{
+            filter: true,
+            sort: true
+          }}
+          pageLimit={5}
+        />
+      )
+    })
+
+    const nameHeading = screen.getByText('Name')
+    const salaryHeading = screen.getByText('Salary')
+
+    expect(nameHeading).toBeInTheDocument()
+    expect(salaryHeading).toBeInTheDocument()
+
+    const name1 = screen.getByText('Jan')
+    const name2 = screen.getByText('Ala')
+    const salary1 = screen.getByText('2000')
+    const salary2 = screen.getByText('3000')
+
+    expect(name1).toBeInTheDocument()
+    expect(name2).toBeInTheDocument()
+    expect(salary1).toBeInTheDocument()
+    expect(salary2).toBeInTheDocument()
   })
 })
-
-//   it('should fetch tableHeaders', async () => {
-//     const mockGetData = jest.fn()
-//     mockGetData.mockResolvedValueOnce({
-//       ok: true,
-//       json: async () => ({
-//         tableHeaders: [
-//           {
-//             title: 'Name',
-//             field: 'name',
-//             id: '1'
-//           },
-//           {
-//             title: 'Salary',
-//             field: 'salary',
-//             id: '2'
-//           }
-//         ]
-//       })
-//     })
-
-//     render(
-//       <ErrorBoundary>
-//         <CreateTable />
-//       </ErrorBoundary>
-//     )
-
-//     await waitFor(() => {
-//       const nameHeader = screen.getByText('Name')
-//       const salaryHeader = screen.getByText('Salary')
-
-//       expect(nameHeader).toBeInTheDocument()
-//       expect(salaryHeader).toBeInTheDocument()
-//       expect(screen.queryByText('Date Of Employment')).toBeNull()
-//     })
-//   })
-
-//   it('should fetch tableData', async () => {
-//     const mockGetData = jest.fn()
-//     mockGetData.mockResolvedValue({
-//       ok: true,
-//       json: async () => ({
-//         tableData: [
-//           {
-//             name: 'Jan',
-//             salary: '2000',
-//             employmentDate: '2021-08-01',
-//             id: '1'
-//           },
-//           {
-//             name: 'Ala',
-//             salary: '3000',
-//             employmentDate: '2018-08-01',
-//             id: '2'
-//           }
-//         ]
-//       })
-//     })
-
-//     render(
-//       <ErrorBoundary>
-//         <CreateTable />
-//       </ErrorBoundary>
-//     )
-
-//     await waitFor(() => {
-//       const nameData = screen.getByText('Jan')
-//       const salaryData = screen.getByText('Ala')
-
-//       expect(nameData).toBeInTheDocument()
-//       expect(salaryData).toBeInTheDocument()
-//     })
-//   })
-// })
