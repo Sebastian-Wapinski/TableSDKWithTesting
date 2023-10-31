@@ -15,19 +15,21 @@ export const Input = (props) => {
 
   const [value, setValue] = React.useState('')
 
+  const handleOnChange = (e) => {
+    const newObj = { ...filteredData, [name]: e.target.value }
+    setFilteredData(newObj)
+    setCurrentPageNumber(1)
+    setValue(e.target.value)
+    filterFn(newObj)
+  }
+
   return (
     <StyledInput
       type={'text'}
       name={name}
       value={value}
       autoComplete={'one-time-code'}
-      onChange={(e) => {
-        const newObj = { ...filteredData, [name]: e.target.value }
-        setFilteredData(newObj)
-        setCurrentPageNumber(1)
-        setValue(e.target.value)
-        filterFn(newObj)
-      }}
+      onChange={handleOnChange}
       data-testid={dataTestid}
     />
   )

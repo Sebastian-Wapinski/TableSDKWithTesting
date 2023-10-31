@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { StyledPaginationNav, StyledUl, StyledLi, StyledDots, StyledPaginationContainer } from './PaginationNav.styled'
+import { setPagesNumbersDependsOnPageNumber } from '../helper/helper'
 
 export const PaginationNav = (props) => {
   const {
@@ -14,6 +15,24 @@ export const PaginationNav = (props) => {
 
   const calculatePagesAmount = () => {
     return Math.ceil((isNaN(length) ? 0 : length) / pageLimit)
+  }
+
+  const addStartDots = (item, index) => {
+    return (
+      <StyledPaginationContainer key={`${index}/dots`}>
+        <StyledDots data-testid={'startDots'}>...</StyledDots>
+        {item}
+      </StyledPaginationContainer>
+    )
+  }
+
+  const addEndDots = (item, index) => {
+    return (
+      <StyledPaginationContainer key={`${index}/dots`}>
+        {item}
+        <StyledDots data-testid={'endDots'}>...</StyledDots>
+      </StyledPaginationContainer>
+    )
   }
 
   const length = data && data.length
@@ -40,60 +59,17 @@ export const PaginationNav = (props) => {
   })
     .filter((item, index) => {
       const pageNumber = index + 1
-
-      if (currentPageNumber === 1 || currentPageNumber === pages) {
-        return (
-          pageNumber === 1 ||
-          pageNumber === pages ||
-          pageNumber === currentPageNumber ||
-          pageNumber === currentPageNumber + 1 ||
-          pageNumber === currentPageNumber - 1 ||
-          pageNumber === currentPageNumber + 2 ||
-          pageNumber === currentPageNumber - 2 ||
-          pageNumber === currentPageNumber + 3 ||
-          pageNumber === currentPageNumber - 3
-        )
-      }
-
-      if (currentPageNumber === 2 || currentPageNumber === (pages - 1)) {
-        return (
-          pageNumber === 1 ||
-          pageNumber === pages ||
-          pageNumber === currentPageNumber ||
-          pageNumber === currentPageNumber + 1 ||
-          pageNumber === currentPageNumber - 1 ||
-          pageNumber === currentPageNumber + 2 ||
-          pageNumber === currentPageNumber - 2
-        )
-      }
-
-      return (
-        pageNumber === 1 ||
-        pageNumber === pages ||
-        pageNumber === currentPageNumber ||
-        pageNumber === currentPageNumber + 1 ||
-        pageNumber === currentPageNumber - 1
-      )
+      return setPagesNumbersDependsOnPageNumber(pageNumber, currentPageNumber, pages)
     })
     .map((item, index) => {
       const pageNumber = index + 1
 
       if (currentPageNumber > 3 && pageNumber === 2) {
-        return (
-          <StyledPaginationContainer key={`${index}/dots`}>
-            <StyledDots data-testid={'startDots'}>...</StyledDots>
-            {item}
-          </StyledPaginationContainer>
-        )
+        return addStartDots(item, index)
       }
 
       if (currentPageNumber < (pages - 2) && pageNumber === 4) {
-        return (
-          <StyledPaginationContainer key={`${index}/dots`}>
-            {item}
-            <StyledDots data-testid={'endDots'}>...</StyledDots>
-          </StyledPaginationContainer>
-        )
+        return addEndDots(item, index)
       }
 
       return item

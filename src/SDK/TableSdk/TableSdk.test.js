@@ -9,6 +9,39 @@ import TableSdk from './TableSdk'
 import { columns, tableData } from './TableSdkTestDB'
 import { act } from 'react-dom/test-utils'
 
+const setUpRenderWithTwoNames = () => {
+  render(
+    <TableSdk
+      columns={columns}
+      data={tableData}
+      options={{
+        filter: true,
+        sort: true
+      }}
+      pageLimit={5}
+    />
+  )
+
+  const nameAla = screen.getByText('Ala')
+  const nameJan = screen.getByText('Jan')
+
+  return { nameAla, nameJan }
+}
+
+const setUpRender = (pageLimitNumber = 1) => {
+  render(
+    <TableSdk
+      columns={columns}
+      data={tableData}
+      options={{
+        filter: true,
+        sort: true
+      }}
+      pageLimit={pageLimitNumber}
+    />
+  )
+}
+
 describe('TableSdk rendering basic pages', () => {
   it('should render headers', () => {
     render(
@@ -86,20 +119,8 @@ describe('TableSdk rendering basic pages', () => {
 
 describe('TableSdk sorting', () => {
   it('TableSdk sorting by Name A-Z', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={5}
-      />
-    )
+    const { nameAla: name1, nameJan: name2 } = setUpRenderWithTwoNames()
 
-    const name1 = screen.getByText('Ala')
-    const name2 = screen.getByText('Jan')
     const nameTableData = screen.getAllByRole('name/TableData')
 
     expect(nameTableData[0] !== name1).toBeTruthy()
@@ -118,25 +139,7 @@ describe('TableSdk sorting', () => {
   })
 
   it('TableSdk sorting by Name Z-A', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={5}
-      />
-    )
-
-    const name1 = screen.getByText('Ala')
-    const name2 = screen.getByText('Jan')
-    const nameTableData = screen.getAllByRole('name/TableData')
-
-    expect(nameTableData[0] !== name1).toBeTruthy()
-    expect(nameTableData[0] === name2).toBeTruthy()
-    expect(nameTableData.length).toBe(5)
+    setUpRender(5)
 
     const sortByName = screen.getByText('Name')
 
@@ -151,34 +154,32 @@ describe('TableSdk sorting', () => {
     const name3 = screen.getByText('Victor')
     const name4 = screen.getByText('Ula')
 
-    const nameTableData2 = screen.getAllByRole('name/TableData')
+    const nameTableData = screen.getAllByRole('name/TableData')
 
-    expect(nameTableData2[0] === name3).toBeTruthy()
-    expect(nameTableData2[1] === name4).toBeTruthy()
+    expect(nameTableData[0] === name3).toBeTruthy()
+    expect(nameTableData[1] === name4).toBeTruthy()
   })
 })
 
 describe('TableSdk filtering', () => {
-  it('should filter by name and not find anything', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={5}
-      />
-    )
+  it('should filter by name', () => {
+    const { nameAla: name2, nameJan: name1 } = setUpRenderWithTwoNames()
 
-    const name1 = screen.getByText('Jan')
-    const name2 = screen.getByText('Ala')
+    const inputName = screen.getByTestId('name/Input/testid')
+
+    act(() => {
+      userEvent.type(inputName, 'j')
+    })
+
     const allDataRows = screen.getAllByRole('dataRow')
 
     expect(name1).toBeInTheDocument()
-    expect(name2).toBeInTheDocument()
-    expect(allDataRows.length).toBe(5)
+    expect(name2).not.toBeInTheDocument()
+    expect(allDataRows.length).toBe(1)
+  })
+
+  it('should filter by name and not find anything', () => {
+    const { nameAla: name2, nameJan: name1 } = setUpRenderWithTwoNames()
 
     const inputName = screen.getByTestId('name/Input/testid')
 
@@ -193,106 +194,8 @@ describe('TableSdk filtering', () => {
     expect(name2).not.toBeInTheDocument()
   })
 
-  it('should filter by name', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={5}
-      />
-    )
-
-    const name1 = screen.getByText('Jan')
-    const name2 = screen.getByText('Ala')
-    const allDataRows = screen.getAllByRole('dataRow')
-
-    expect(name1).toBeInTheDocument()
-    expect(name2).toBeInTheDocument()
-    expect(allDataRows.length).toBe(5)
-
-    const inputName = screen.getByTestId('name/Input/testid')
-
-    act(() => {
-      userEvent.type(inputName, 'j')
-    })
-
-    const allDataRows2 = screen.getAllByRole('dataRow')
-
-    expect(name1).toBeInTheDocument()
-    expect(name2).not.toBeInTheDocument()
-    expect(allDataRows2.length).toBe(1)
-  })
-
   it('should filter by name and salary', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={5}
-      />
-    )
-
-    const name1 = screen.getByText('Jan')
-    const name2 = screen.getByText('Ala')
-    const allDataRows = screen.getAllByRole('dataRow')
-
-    expect(name1).toBeInTheDocument()
-    expect(name2).toBeInTheDocument()
-    expect(allDataRows.length).toBe(5)
-
-    const inputName = screen.getByTestId('name/Input/testid')
-
-    act(() => {
-      userEvent.type(inputName, 'al')
-
-      const name3 = screen.getByText('Alex')
-      const allDataRows2 = screen.getAllByRole('dataRow')
-
-      expect(name1).not.toBeInTheDocument()
-      expect(name2).toBeInTheDocument()
-      expect(name3).toBeInTheDocument()
-      expect(allDataRows2.length).toBe(2)
-
-      const inputSalary = screen.getByTestId('salary/Input/testid')
-
-      userEvent.type(inputSalary, '3')
-
-      const allDataRows3 = screen.getAllByRole('dataRow')
-
-      expect(name2).toBeInTheDocument()
-      expect(name3).not.toBeInTheDocument()
-      expect(allDataRows3.length).toBe(1)
-    })
-  })
-
-  it('should filter reset after clearing name and salary', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={5}
-      />
-    )
-
-    const name1 = screen.getByText('Jan')
-    const name2 = screen.getByText('Ala')
-    const allDataRows = screen.getAllByRole('dataRow')
-
-    expect(name1).toBeInTheDocument()
-    expect(name2).toBeInTheDocument()
-    expect(allDataRows.length).toBe(5)
+    const { nameAla: name2, nameJan: name1 } = setUpRenderWithTwoNames()
 
     const inputName = screen.getByTestId('name/Input/testid')
 
@@ -301,12 +204,12 @@ describe('TableSdk filtering', () => {
     })
 
     const name3 = screen.getByText('Alex')
-    const allDataRows2 = screen.getAllByRole('dataRow')
+    const allDataRows = screen.getAllByRole('dataRow')
 
     expect(name1).not.toBeInTheDocument()
     expect(name2).toBeInTheDocument()
     expect(name3).toBeInTheDocument()
-    expect(allDataRows2.length).toBe(2)
+    expect(allDataRows.length).toBe(2)
 
     const inputSalary = screen.getByTestId('salary/Input/testid')
 
@@ -314,57 +217,61 @@ describe('TableSdk filtering', () => {
       userEvent.type(inputSalary, '3')
     })
 
-    const allDataRows3 = screen.getAllByRole('dataRow')
+    const allDataRows2 = screen.getAllByRole('dataRow')
 
     expect(name2).toBeInTheDocument()
     expect(name3).not.toBeInTheDocument()
-    expect(allDataRows3.length).toBe(1)
+    expect(allDataRows2.length).toBe(1)
+  })
+
+  it('should filter and reset after clearing name and salary', () => {
+    const { nameAla: name2, nameJan: name1 } = setUpRenderWithTwoNames()
+
+    const inputName = screen.getByTestId('name/Input/testid')
+
+    act(() => {
+      userEvent.type(inputName, 'al')
+    })
+
+    const inputSalary = screen.getByTestId('salary/Input/testid')
+
+    act(() => {
+      userEvent.type(inputSalary, '3')
+    })
 
     act(() => {
       inputSalary.setSelectionRange(0, 1)
       userEvent.type(inputSalary, '{backspace}')
     })
 
-    const allDataRows4 = screen.getAllByRole('dataRow')
+    const allDataRows = screen.getAllByRole('dataRow')
 
-    const name4 = screen.getByText('Alex')
+    const name3 = screen.getByText('Alex')
 
     expect(name1).not.toBeInTheDocument()
     expect(name2).toBeInTheDocument()
-    expect(name4).toBeInTheDocument()
-    expect(allDataRows4.length).toBe(2)
+    expect(name3).toBeInTheDocument()
+    expect(allDataRows.length).toBe(2)
 
     act(() => {
       inputName.setSelectionRange(0, 2)
       userEvent.type(inputName, '{backspace}')
     })
 
-    const allDataRows5 = screen.getAllByRole('dataRow')
+    const allDataRows2 = screen.getAllByRole('dataRow')
 
-    const name5 = screen.getByText('Jan')
+    const name4 = screen.getByText('Jan')
 
     expect(name2).toBeInTheDocument()
-    expect(name5).toBeInTheDocument()
-    expect(allDataRows5.length).toBe(5)
+    expect(name4).toBeInTheDocument()
+    expect(allDataRows2.length).toBe(5)
   })
 })
 
 describe('TableSdk filtering/sorting together', () => {
   it('sorting and next filtering', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={5}
-      />
-    )
+    const { nameAla: name1, nameJan: name2 } = setUpRenderWithTwoNames()
 
-    const name1 = screen.getByText('Ala')
-    const name2 = screen.getByText('Jan')
     const nameTableData = screen.getAllByRole('name/TableData')
 
     expect(nameTableData[0] !== name1).toBeTruthy()
@@ -397,20 +304,8 @@ describe('TableSdk filtering/sorting together', () => {
   })
 
   it('filtering and next sorting', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={5}
-      />
-    )
+    const { nameAla: name2, nameJan: name1 } = setUpRenderWithTwoNames()
 
-    const name1 = screen.getByText('Jan')
-    const name2 = screen.getByText('Ala')
     const nameTableData = screen.getAllByRole('name/TableData')
 
     expect(name1).toBeInTheDocument()
@@ -453,17 +348,7 @@ describe('TableSdk filtering/sorting together', () => {
 
 describe('TableSdk pagination', () => {
   it('should show pagination pages', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={1}
-      />
-    )
+    setUpRender()
 
     const allPaginationPages = screen.getAllByTestId(/pageNumber/i)
     const endDots = screen.getByTestId(/endDots/i)
@@ -473,17 +358,7 @@ describe('TableSdk pagination', () => {
   })
 
   it('should show pagination end dots', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={1}
-      />
-    )
+    setUpRender()
 
     const endDots = screen.getByTestId(/endDots/i)
 
@@ -509,17 +384,7 @@ describe('TableSdk pagination', () => {
   })
 
   it('changing page and then showing next page\'s content', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={1}
-      />
-    )
+    setUpRender()
 
     const name1 = screen.getByText('Jan')
 
@@ -537,18 +402,8 @@ describe('TableSdk pagination', () => {
     expect(screen.getByTestId('2/pageNumber/test/true')).toBeInTheDocument()
   })
 
-  it('starting filter changes page to 1', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={1}
-      />
-    )
+  it('filter changes page to 1', () => {
+    setUpRender()
 
     const secondPage = screen.getByTestId('2/pageNumber/test/false')
     act(() => {
@@ -566,23 +421,15 @@ describe('TableSdk pagination', () => {
     const firstPage = screen.getByTestId('1/pageNumber/test/true')
 
     expect(firstPage).toBeInTheDocument()
-    expect(screen.queryByTestId('2/pageNumber/test')).toBeNull()
+    expect(screen.queryByTestId('2/pageNumber/test/true')).toBeNull()
+    expect(screen.queryByTestId('2/pageNumber/test/false')).toBeNull()
   })
 })
 
 describe('TableSdk buttonsChangingPages', () => {
   it('should not let click prev btn when you are on first side', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={1}
-      />
-    )
+    setUpRender()
+
     const name1 = screen.getByText('Jan')
     const pageInfo = screen.getByText('1/10')
     expect(name1).toBeInTheDocument()
@@ -598,17 +445,7 @@ describe('TableSdk buttonsChangingPages', () => {
   })
 
   it('should not let click next btn when you are on last side', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={1}
-      />
-    )
+    setUpRender()
 
     const lastPage = screen.getByTestId('10/pageNumber/test/false')
     act(() => {
@@ -630,19 +467,10 @@ describe('TableSdk buttonsChangingPages', () => {
   })
 
   it('should change side when clicking next btn', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={1}
-      />
-    )
+    setUpRender()
 
     const name1 = screen.getByText('Jan')
+
     expect(name1).toBeInTheDocument()
 
     const nextBtn = screen.getByTestId('nextButton/ButtonsChangingPages')
@@ -660,17 +488,7 @@ describe('TableSdk buttonsChangingPages', () => {
   })
 
   it('should change side when clicking prev btn', () => {
-    render(
-      <TableSdk
-        columns={columns}
-        data={tableData}
-        options={{
-          filter: true,
-          sort: true
-        }}
-        pageLimit={1}
-      />
-    )
+    setUpRender()
 
     const lastPage = screen.getByTestId('10/pageNumber/test/false')
     act(() => {
