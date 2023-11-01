@@ -7,7 +7,7 @@ import Input from '../Input'
 
 export const TableData = (props) => {
   const {
-    pageLimit,
+    pageLimit = 5,
     columns,
     moderatedData,
     data,
@@ -19,7 +19,7 @@ export const TableData = (props) => {
 
   const [filteredData, setFilteredData] = React.useState({})
 
-  const filterFn = (newFilterParams) => {
+  const filterFn = React.useCallback((newFilterParams) => {
     const newFilteredData = data.filter((oneRow) => {
       const conditions = Object.entries(newFilterParams).map((param) => {
         const [key, value] = param
@@ -30,7 +30,7 @@ export const TableData = (props) => {
     })
 
     setModeratedData(newFilteredData)
-  }
+  }, [data, setModeratedData])
 
   return (
     <>

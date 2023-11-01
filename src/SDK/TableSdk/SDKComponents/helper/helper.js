@@ -34,7 +34,7 @@ const setForOnePageAndAnother = (pageNumber, currentPageNumber, pages) => {
   )
 }
 
-export const setPagesNumbersDependsOnPageNumber = (pageNumber, currentPageNumber, pages) => {
+export const setRenderPagesNumbersDependsOnPageNumber = (pageNumber, currentPageNumber, pages) => {
   if (currentPageNumber === 1 || currentPageNumber === pages) {
     return (
       setForThreePages(pageNumber, currentPageNumber, pages)
@@ -50,4 +50,16 @@ export const setPagesNumbersDependsOnPageNumber = (pageNumber, currentPageNumber
   return (
     setForOnePageAndAnother(pageNumber, currentPageNumber, pages)
   )
+}
+
+export const setActiveValue = (currentPageNumber, index) => {
+  if (currentPageNumber === (index + 1)) {
+    return true
+  } else {
+    return false
+  }
+}
+
+export const calculatePagesAmount = (length, pageLimit) => {
+  return Math.ceil((isNaN(length) ? 0 : length) / pageLimit)
 }

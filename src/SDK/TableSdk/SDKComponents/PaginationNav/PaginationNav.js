@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { StyledPaginationNav, StyledUl, StyledLi, StyledDots, StyledPaginationContainer } from './PaginationNav.styled'
-import { setPagesNumbersDependsOnPageNumber } from '../helper/helper'
+import { calculatePagesAmount, setActiveValue, setRenderPagesNumbersDependsOnPageNumber } from '../helper/helper'
 
 export const PaginationNav = (props) => {
   const {
@@ -13,13 +13,9 @@ export const PaginationNav = (props) => {
     currentPageNumber
   } = props
 
-  const calculatePagesAmount = () => {
-    return Math.ceil((isNaN(length) ? 0 : length) / pageLimit)
-  }
-
   const addStartDots = (item, index) => {
     return (
-      <StyledPaginationContainer key={`${index}/dots`}>
+      <StyledPaginationContainer key={`${index}/dotsStart`}>
         <StyledDots data-testid={'startDots'}>...</StyledDots>
         {item}
       </StyledPaginationContainer>
@@ -28,7 +24,7 @@ export const PaginationNav = (props) => {
 
   const addEndDots = (item, index) => {
     return (
-      <StyledPaginationContainer key={`${index}/dots`}>
+      <StyledPaginationContainer key={`${index}/dotsEnd`}>
         {item}
         <StyledDots data-testid={'endDots'}>...</StyledDots>
       </StyledPaginationContainer>
@@ -36,13 +32,10 @@ export const PaginationNav = (props) => {
   }
 
   const length = data && data.length
-  const pages = calculatePagesAmount()
+  const pages = calculatePagesAmount(length, pageLimit)
 
   const pageNumbers = (new Array(pages)).fill(0).map((item, index) => {
-    let isActive = false
-    if (currentPageNumber === (index + 1)) {
-      isActive = true
-    }
+    const isActive = setActiveValue(currentPageNumber, index)
 
     return (
       <StyledLi
@@ -59,7 +52,7 @@ export const PaginationNav = (props) => {
   })
     .filter((item, index) => {
       const pageNumber = index + 1
-      return setPagesNumbersDependsOnPageNumber(pageNumber, currentPageNumber, pages)
+      return setRenderPagesNumbersDependsOnPageNumber(pageNumber, currentPageNumber, pages)
     })
     .map((item, index) => {
       const pageNumber = index + 1
