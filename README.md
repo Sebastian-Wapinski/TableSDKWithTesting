@@ -7,7 +7,7 @@ The project presents an SDK enabling convenient creation of data in tabular form
 **Main features**:
 
 - Utilizing React Testing Library for testing
-- Utilizing localStorage for simulating the fetching of tabular data
+- Utilizing JSON Server for simulating the fetching of tabular data
 - Implementing filtering for individual columns
 - Enabling sorting for individual columns
 - Implementing pagination
